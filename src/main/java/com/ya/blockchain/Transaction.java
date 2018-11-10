@@ -5,6 +5,8 @@
  */
 package com.ya.blockchain;
 
+import com.ya.blockchain.domain.TransactionOutput;
+import com.ya.blockchain.domain.TransactionInput;
 import com.ya.blockchain.util.StringUtil;
 import java.security.PrivateKey;
 import java.security.PublicKey;

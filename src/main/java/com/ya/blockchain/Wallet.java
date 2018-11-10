@@ -5,6 +5,8 @@
  */
 package com.ya.blockchain;
 
+import com.ya.blockchain.domain.TransactionOutput;
+import com.ya.blockchain.domain.TransactionInput;
 import java.security.*;
 import java.security.spec.ECGenParameterSpec;
 import java.util.ArrayList;

@@ -5,6 +5,8 @@
  */
 package com.ya.blockchain;
 
+import com.ya.blockchain.domain.TransactionOutput;
+import com.ya.blockchain.domain.TransactionInput;
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.HashMap;
