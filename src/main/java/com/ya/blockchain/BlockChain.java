@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class BlockChain {
 
     public static ArrayList<Block> blockchain = new ArrayList<Block>();
-    public static HashMap<String, TransactionOutput> UTXOs = new HashMap<String, TransactionOutput>(); //list of all unspent transactions. 
+    public static HashMap<String, TransactionOutput> global_UTXOs = new HashMap<String, TransactionOutput>(); //list of all unspent transactions. 
     public static int difficulty = 3;
     public static float minimumTransaction = 0.1f;
     public static Wallet walletA;
@@ -58,8 +58,8 @@ public class BlockChain {
         genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 100f, null);
         genesisTransaction.generateSignature(coinbase.privateKey);	 //manually sign the genesis transaction	
         genesisTransaction.transactionId = "0"; //manually set the transaction id
-        genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.reciepient, genesisTransaction.value, genesisTransaction.transactionId)); //manually add the Transactions Output
-        UTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0)); //its important to store our first transaction in the UTXOs list.
+        genesisTransaction.t_outputs.add(new TransactionOutput(genesisTransaction.reciepient, genesisTransaction.value, genesisTransaction.transactionId)); //manually add the Transactions Output
+        global_UTXOs.put(genesisTransaction.t_outputs.get(0).id, genesisTransaction.t_outputs.get(0)); //its important to store our first transaction in the UTXOs list.
 
         System.out.println("Creating and Mining Genesis block... ");
         Block genesis = new Block("0");
@@ -97,7 +97,7 @@ public class BlockChain {
         Block previousBlock;
         String hashTarget = new String(new char[difficulty]).replace('\0', '0');
         HashMap<String, TransactionOutput> tempUTXOs = new HashMap<String, TransactionOutput>(); //a temporary working list of unspent transactions at a given block state.
-        tempUTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0));
+        tempUTXOs.put(genesisTransaction.t_outputs.get(0).id, genesisTransaction.t_outputs.get(0));
 
         //loop through blockchain to check hashes:
         for (int i = 1; i < blockchain.size(); i++) {
@@ -134,7 +134,7 @@ public class BlockChain {
                     return false;
                 }
 
-                for (TransactionInput input : currentTransaction.inputs) {
+                for (TransactionInput input : currentTransaction.t_inputs) {
                     tempOutput = tempUTXOs.get(input.transactionOutputId);
 
                     if (tempOutput == null) {
@@ -150,15 +150,15 @@ public class BlockChain {
                     tempUTXOs.remove(input.transactionOutputId);
                 }
 
-                for (TransactionOutput output : currentTransaction.outputs) {
+                for (TransactionOutput output : currentTransaction.t_outputs) {
                     tempUTXOs.put(output.id, output);
                 }
 
-                if (currentTransaction.outputs.get(0).reciepient != currentTransaction.reciepient) {
+                if (currentTransaction.t_outputs.get(0).reciepient != currentTransaction.reciepient) {
                     System.out.println("#Transaction(" + t + ") output reciepient is not who it should be");
                     return false;
                 }
-                if (currentTransaction.outputs.get(1).reciepient != currentTransaction.sender) {
+                if (currentTransaction.t_outputs.get(1).reciepient != currentTransaction.sender) {
                     System.out.println("#Transaction(" + t + ") output 'change' is not sender.");
                     return false;
                 }
